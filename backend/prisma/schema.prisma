@@ -6,6 +6,77 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+// Modelagem das tabelas
+
+model User { // sempre primeira letra maiuscula
+  id  Int @id @default(autoincrement()) // PK, aqui o valor padrao é autoincrement
+  name String
+  email String
+  password String
+  create_at DateTime? @default(now()) // o datetime é opcional e ele pega a data atual
+  updated_at DateTime? @default(now()) 
+
+  @@map("users") // o nome que vai ficar no mysql, aqui é no plurar e minusculo
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String
+  create_at DateTime? @default(now())
+  updated_at DateTime? @default(now()) 
+
+  @@map("categories")
+  products Product[] // uma categoria tem varios produtos (1-n)
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+  name String
+  price String 
+  description String
+  banner String
+  create_at DateTime? @default(now())
+  updated_at DateTime? @default(now()) 
+    
+  // o references é o campo que eu relaciono na tabela de products e category_id é o nome da chave FK
+  category Category @relation(fields: [category_id], references: [id]) 
+
+  @@map("products")
+  category_id Int
+
+  orderItems OrderItem[]
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  table Int 
+  status Boolean @default(false) // o valor vai ser setado como false ate eu decidir alterar
+  draft Boolean @default(true) // o valor vai ser setado como true ate eu alterar
+  create_at DateTime? @default(now())
+  updated_at DateTime? @default(now()) 
+
+  @@map("orders")
+  
+  orderItems OrderItem[]
+}
+
+// essa é uma tabela que surgiu a partir de um relacionamento (n-n), logo ela tem
+// a chave FK de order e product
+// https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations
+model OrderItem {
+  id Int @id @default(autoincrement())
+  amount Int
+  create_at DateTime? @default(now())
+  updated_at DateTime? @default(now()) 
+  
+  order Order @relation(fields: [order_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+
+  @@map("orderItems") // com order_items tava dando erro
+  order_id Int
+  product_id Int
 }
