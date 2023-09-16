@@ -3,7 +3,7 @@ import { CreateUserService } from "../../services/users/CreateUserService";
 
 class CreateUserController {
   async handle(req: Request, res: Response) {
-    /* Pega todos os dados do json que estao na tabela de users */
+    /* Pega todos os dados do json que estao definidos na tabela de users */
     const { name, email, password } = req.body;
 
     /* Instancia a classe */
