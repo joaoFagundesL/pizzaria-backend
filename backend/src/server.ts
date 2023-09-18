@@ -35,6 +35,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     status: "error",
     message: "internal server error",
   });
+
+  /* Nao precisa do return next() porque esse é um middleware de erro e
+   * nao tem necessidade de chamar o proximo middleware na pilha de execucao */
 });
 
 /* Servidor iniciando em uma porta especifica */

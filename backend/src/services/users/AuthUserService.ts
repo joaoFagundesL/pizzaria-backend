@@ -1,6 +1,8 @@
 import prismaClient from "../../prisma";
 import { compare } from "bcryptjs";
+import { sign } from "jsonwebtoken"; // importando para trabalhar com o JWT
 
+/* Tipar os dados que foram passdos pelo controller */
 interface AuthRequest {
   email: string;
   password: string;
@@ -30,7 +32,30 @@ class AuthUserService {
       throw new Error("email/password incorret");
     }
 
-    return { ok: true };
+    /* Geracao do token para o usuário. Isso é necessario pois apenas um usuário
+     * logado e com um token pode cadastrar produtos. Esse é um dos motivos do porque
+     * a JWT e a partir desse token eu consigo saber se o usuário esta autenticado */
+    const token = sign(
+      {
+        name: user.name,
+        email: user.email,
+      },
+
+      /* process.env sao as variaveis ambientes que estao definidas no arquivo .env.
+       * Nesse caso a JWT_SECRET foi definida para assinar os tokens que vao ser gerados */
+      process.env.JWT_SECRET,
+      {
+        subject: String(user.id), // se nao converter para string ele da um erro, pois a bilbioteca espera uma string e nao um number
+        expiresIn: "30d",
+      },
+    );
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      token: token,
+    };
   }
 }
 
