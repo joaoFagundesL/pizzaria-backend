@@ -1,9 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verify } from "jsonwebtoken";
-
-interface PayLoad {
-  sub: string; // é o id do usuário no payload
-}
+import { JwtPayload, verify } from "jsonwebtoken";
 
 export function isAuthenticated(
   req: Request,
@@ -25,11 +21,18 @@ export function isAuthenticated(
 
   try {
     /* O verify pega o token e JWT para comparar. Umas das coisas que esse método
-     * retorna é o sub(id), por isso eu descontrui { sub } e vai ser do tipo payload(interface)*/
-    const { sub } = verify(token, process.env.JWT_SECRET) as PayLoad;
+     * retorna é o sub(id), por isso eu descontrui { sub }. */
+    const { sub } = verify(token, process.env.JWT_SECRET) as JwtPayload;
+
+    /* Estava retornando como string, entao foi preciso transformar em number (base 10) */
+    /* O req.user_id não existe, eu que criei ele no @types e modifiquei o arquivo de config
+     * do ts para reconhecer a pasta @types. Agora, eu consigo acessar o req.user_id em outros
+     * locais */
+    req.user_id = parseInt(sub, 10);
 
     return next();
   } catch (err) {
+    /* A verificacao do token nao deu certo */
     return res.status(401).end();
   }
 }
