@@ -5,7 +5,8 @@ import { DetailUserController } from "./controllers/users/DetailUserController";
 import { CreateCategoryController } from "./controllers/categories/CreateCategoryController";
 
 import { isAuthenticated } from "./middlewares/isAuthenticated";
-import { CreateCategoryService } from "./services/categories/CreateCategoryService";
+import { DetailCategoriesController } from "./controllers/categories/DetailCategoriesController";
+import { CreateProductController } from "./controllers/products/CreateProductController";
 
 const router = Router();
 
@@ -30,6 +31,16 @@ router.post(
   isAuthenticated,
   new CreateCategoryController().handle,
 );
+
+/* Listar todas categorias */
+router.get(
+  "/categories",
+  isAuthenticated,
+  new DetailCategoriesController().handle,
+);
+
+/* ------------ROTAS PRODUTO -------------- */
+router.post("/products", isAuthenticated, new CreateProductController().handle);
 
 /* Exporto para poder usar em outras partes do programa,
  * bem como na parte do server.ts */
