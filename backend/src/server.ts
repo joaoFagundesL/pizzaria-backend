@@ -7,6 +7,7 @@ import "express-async-errors";
 /* Habilita qualquer IP ou URL fazer uma requisicao */
 import cors from "cors";
 import { router } from "./routes";
+import path from "path";
 
 const app = express();
 
@@ -14,6 +15,10 @@ const app = express();
  * do meu programa */
 app.use(express.json());
 app.use(cors());
+
+/* Para ser possivel ver as fotos que foram cadastradas. Caso eu entre no browser e coloque a url localhost:3333/files/<name>
+ * eu vou conseguir ver a foto */
+app.use("/files", express.static(path.resolve(__dirname, "..", "tmp")));
 
 /* Aqui eu uso as rotas que eu criei no arquivo src/routes.ts */
 app.use(router);
