@@ -11,6 +11,8 @@ import { CreateProductController } from "./controllers/products/CreateProductCon
 import uploadConfig from "./config/multer";
 import multer from "multer";
 import { ListByCategoryController } from "./controllers/products/ListByCategoryController";
+import { CreateOrderController } from "./controllers/order/CreateOrderController";
+import { RemoveOrderController } from "./controllers/order/RemoveOrderController";
 
 const router = Router();
 
@@ -62,6 +64,14 @@ router.get(
   isAuthenticated,
   new ListByCategoryController().handle,
 );
+
+/* ------------ROTAS ORDER-------------- */
+
+/* Abre uma nova mesa com número e um nome (opcional) */
+router.post("/order", isAuthenticated, new CreateOrderController().handle);
+
+/* Remover uma order, nao importa ser o mesmo ja que um é post e o outro delete */
+router.delete("/order", isAuthenticated, new RemoveOrderController().handle);
 
 /* Exporto para poder usar em outras partes do programa,
  * bem como na parte do server.ts */
