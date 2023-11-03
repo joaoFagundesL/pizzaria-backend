@@ -16,6 +16,7 @@ import { RemoveOrderController } from "./controllers/order/RemoveOrderController
 import { AddItemController } from "./controllers/order/AddItemController";
 import { RemoveItemController } from "./controllers/order/RemoveItemController";
 import { SendOrderController } from "./controllers/order/SendOrderController";
+import { ListOrdersController } from "./controllers/order/ListOrdersController";
 
 const router = Router();
 
@@ -87,6 +88,9 @@ router.delete(
 
 /* put pois eu vou atualizar o draft */
 router.put("/order/send", isAuthenticated, new SendOrderController().handle);
+
+/* Lista todos os pedidos com draft e status false */
+router.get("/orders", isAuthenticated, new ListOrdersController().handle);
 
 /* Exporto para poder usar em outras partes do programa,
  * bem como na parte do server.ts */
