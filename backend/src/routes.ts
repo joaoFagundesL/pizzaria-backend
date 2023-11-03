@@ -18,6 +18,7 @@ import { RemoveItemController } from "./controllers/order/RemoveItemController";
 import { SendOrderController } from "./controllers/order/SendOrderController";
 import { ListOrdersController } from "./controllers/order/ListOrdersController";
 import { OrderDetailsController } from "./controllers/order/OrderDetailsController";
+import { FinishOrderController } from "./controllers/order/FinishOrderController";
 
 const router = Router();
 
@@ -97,6 +98,13 @@ router.get(
   "/order/detail",
   isAuthenticated,
   new OrderDetailsController().handle,
+);
+
+/* Atualizar o status de um pedido */
+router.put(
+  "/order/finish",
+  isAuthenticated,
+  new FinishOrderController().handle,
 );
 
 /* Exporto para poder usar em outras partes do programa,
