@@ -15,6 +15,7 @@ import { CreateOrderController } from "./controllers/order/CreateOrderController
 import { RemoveOrderController } from "./controllers/order/RemoveOrderController";
 import { AddItemController } from "./controllers/order/AddItemController";
 import { RemoveItemController } from "./controllers/order/RemoveItemController";
+import { SendOrderController } from "./controllers/order/SendOrderController";
 
 const router = Router();
 
@@ -83,6 +84,9 @@ router.delete(
   isAuthenticated,
   new RemoveItemController().handle,
 );
+
+/* put pois eu vou atualizar o draft */
+router.put("/order/send", isAuthenticated, new SendOrderController().handle);
 
 /* Exporto para poder usar em outras partes do programa,
  * bem como na parte do server.ts */
